@@ -70,3 +70,12 @@ step "Miniconda 3"
 brew install --cask miniconda
 conda init "$(basename "${SHELL}")"
 conda config --set auto_activate_base false
+
+step "Get nvm"
+brew install nvm
+mkdir ~/.nvm
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"' >> ~/.zshrc
+source ~/.zshrc
+nvm install node
