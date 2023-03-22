@@ -6,8 +6,8 @@ function step(){
 }
 
 step "Configure git"
-git config --global user.name "Yen-Chi Chen"
-git config --global user.email "zxkyjimmy@gmail.com"
+git config --global user.name "Marsgoat"
+git config --global user.email "johnny3681@gmail.com"
 git config --global pull.rebase false
 
 step "Get HomeBrew"
