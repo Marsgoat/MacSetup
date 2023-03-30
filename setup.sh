@@ -20,8 +20,15 @@ fi
 
 step "Install utils"
 brew install htop tree openssh cmake julia
-brew install --cask the-unarchiver oracle-jdk mos
+brew install --cask the-unarchiver mos
 brew install --cask topnotch # hide the notch
+
+step "Install Java"
+brew install --cask adoptopenjdk
+echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 17)' >> ~/.zshrc
+echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.zshrc
+source ~/.zshrc
+
 
 step "Set ssh"
 [ -d ~/.ssh ] || mkdir ~/.ssh
