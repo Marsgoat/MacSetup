@@ -43,7 +43,7 @@ brew install font-caskaydia-cove-nerd-font
 step "Modify Terminal Font"
 osascript -e '
 tell application "Terminal"
-  set font name of settings set "Basic" to "CaskaydiaCove Nerd Font Mono"
+  set font name of settings set "Basic" to "CaskaydiaCove Nerd Font"
   set font size of settings set "Basic" to 16
 end tell
 '
@@ -70,7 +70,7 @@ pip install yapf
 [ -d ${HOME}/.config/yapf ] || mkdir -p ${HOME}/.config/yapf
 cat <<EOF | tee ${HOME}/.config/yapf/style
 [style]
-based_on_style = yapf
+based_on_style = google
 EOF
 
 step "Miniconda 3"
