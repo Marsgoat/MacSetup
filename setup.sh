@@ -19,7 +19,7 @@ if [[ $(uname -p) == 'arm' ]]; then
 fi
 
 step "Install utils"
-brew install htop tree openssh cmake julia
+brew install htop tree openssh cmake
 brew install --cask the-unarchiver mos
 brew install --cask topnotch # hide the notch
 
