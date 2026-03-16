@@ -48,6 +48,13 @@ else
   fi
 fi
 
+step "Set default shell to zsh"
+if [ "$SHELL" = "/bin/zsh" ]; then
+  skip "zsh (already default shell)"
+else
+  chsh -s /bin/zsh
+fi
+
 step "Install utils"
 for pkg in htop tree openssh cmake coreutils; do
   brew_install "$pkg"
