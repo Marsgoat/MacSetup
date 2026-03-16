@@ -5,40 +5,74 @@ function step(){
   echo "$(tput setaf 10)$1$(tput sgr0)"
 }
 
+function skip(){
+  echo "$(tput setaf 11)  ⏭ $1 already installed, skipping$(tput sgr0)"
+}
+
+function brew_install(){
+  if brew list "$1" &>/dev/null; then
+    skip "$1"
+  else
+    brew install "$1"
+  fi
+}
+
+function brew_install_cask(){
+  if brew list --cask "$1" &>/dev/null; then
+    skip "$1"
+  else
+    brew install --cask "$1"
+  fi
+}
+
+function append_if_missing(){
+  local file="$1"
+  local line="$2"
+  grep -qF "$line" "$file" 2>/dev/null || echo "$line" >> "$file"
+}
+
 step "Configure git"
 git config --global user.name "Marsgoat"
 git config --global user.email "johnny3681@gmail.com"
 git config --global pull.rebase false
 
 step "Get HomeBrew"
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-if [[ $(uname -p) == 'arm' ]]; then
-  step "Set Apple Silicon HomeBrew Path"
-  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ${HOME}/.zprofile
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+if command -v brew &>/dev/null; then
+  skip "HomeBrew"
+else
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if [[ $(uname -p) == 'arm' ]]; then
+    step "Set Apple Silicon HomeBrew Path"
+    append_if_missing "${HOME}/.zprofile" 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
 fi
 
 step "Install utils"
-brew install htop tree openssh cmake coreutils
-brew install --cask the-unarchiver mos
-brew install --cask topnotch # hide the notch
+for pkg in htop tree openssh cmake coreutils; do
+  brew_install "$pkg"
+done
+for cask in the-unarchiver mos topnotch; do
+  brew_install_cask "$cask"
+done
 
 step "Install Java"
-brew install --cask temurin
-echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.zshrc
-echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.zshrc
-source ~/.zshrc
-
+brew_install_cask "temurin"
+append_if_missing ~/.zshrc 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)'
+append_if_missing ~/.zshrc 'export PATH=$JAVA_HOME/bin:$PATH'
 
 step "Set ssh"
-[ -d ~/.ssh ] || mkdir ~/.ssh
-ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y
-echo "" # newline
+if [ -f ~/.ssh/id_rsa ]; then
+  skip "SSH key"
+else
+  [ -d ~/.ssh ] || mkdir ~/.ssh
+  ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y
+  echo "" # newline
+fi
 
 step "Font"
-brew tap homebrew/cask-fonts
-brew install font-sauce-code-pro-nerd-font
-brew install font-caskaydia-cove-nerd-font
+brew_install "font-sauce-code-pro-nerd-font"
+brew_install "font-caskaydia-cove-nerd-font"
 
 step "Modify Terminal Font"
 osascript -e '
@@ -49,24 +83,45 @@ end tell
 '
 
 step "Get oh-my-zsh"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+if [ -d ~/.oh-my-zsh ]; then
+  skip "oh-my-zsh"
+else
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
+fi
+ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
+if [ -d "${ZSH_CUSTOM_DIR}/plugins/zsh-autosuggestions" ]; then
+  skip "zsh-autosuggestions"
+else
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git "${ZSH_CUSTOM_DIR}/plugins/zsh-autosuggestions"
+fi
+if [ -d "${ZSH_CUSTOM_DIR}/plugins/zsh-syntax-highlighting" ]; then
+  skip "zsh-syntax-highlighting"
+else
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM_DIR}/plugins/zsh-syntax-highlighting"
+fi
+if [ -d "${ZSH_CUSTOM_DIR}/themes/powerlevel10k" ]; then
+  skip "powerlevel10k"
+else
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM_DIR}/themes/powerlevel10k"
+fi
 cp .p10k.zsh .zshrc ${HOME}/
 
 step "Get HyperTerminal"
-brew install --cask hyper
+brew_install_cask "hyper"
 cp .hyper.js ${HOME}/
 
 step "Get python & yapf"
 PYTHON="python@3.11"
-brew install ${PYTHON}
-echo "export PATH=\$(brew --prefix)/opt/"${PYTHON}"/bin:\$PATH" >> ~/.zshrc
-echo "export PATH=\$(brew --prefix)/opt/"${PYTHON}"/libexec/bin:\$PATH" >> ~/.zshrc
+brew_install "${PYTHON}"
+append_if_missing ~/.zshrc "export PATH=\$(brew --prefix)/opt/${PYTHON}/bin:\$PATH"
+append_if_missing ~/.zshrc "export PATH=\$(brew --prefix)/opt/${PYTHON}/libexec/bin:\$PATH"
 export PATH=$(brew --prefix)/opt/$PYTHON/bin:$PATH
 export PATH=$(brew --prefix)/opt/$PYTHON/libexec/bin:$PATH
-pip install yapf
+if command -v yapf &>/dev/null; then
+  skip "yapf"
+else
+  pip install yapf
+fi
 [ -d ${HOME}/.config/yapf ] || mkdir -p ${HOME}/.config/yapf
 cat <<EOF | tee ${HOME}/.config/yapf/style
 [style]
@@ -74,15 +129,15 @@ based_on_style = google
 EOF
 
 step "Miniconda 3"
-brew install --cask miniconda
+brew_install_cask "miniconda"
 conda init "$(basename "${SHELL}")"
 conda config --set auto_activate_base false
 
 step "Get nvm"
-brew install nvm
-mkdir ~/.nvm
-echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
-echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
-echo '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"' >> ~/.zshrc
+brew_install "nvm"
+[ -d ~/.nvm ] || mkdir ~/.nvm
+append_if_missing ~/.zshrc 'export NVM_DIR="$HOME/.nvm"'
+append_if_missing ~/.zshrc '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"'
+append_if_missing ~/.zshrc '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"'
 source ~/.zshrc
 nvm install --lts
