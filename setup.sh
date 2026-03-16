@@ -19,13 +19,13 @@ if [[ $(uname -p) == 'arm' ]]; then
 fi
 
 step "Install utils"
-brew install htop tree openssh cmake
+brew install htop tree openssh cmake coreutils
 brew install --cask the-unarchiver mos
 brew install --cask topnotch # hide the notch
 
 step "Install Java"
-brew install --cask adoptopenjdk
-echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 17)' >> ~/.zshrc
+brew install --cask temurin
+echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.zshrc
 echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.zshrc
 source ~/.zshrc
 
@@ -85,4 +85,4 @@ echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
 echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
 echo '[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"' >> ~/.zshrc
 source ~/.zshrc
-nvm install node
+nvm install --lts

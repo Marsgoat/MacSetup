@@ -114,3 +114,19 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# --- 指令語法高亮顏色（暗色調）---
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[command]='fg=65'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=65'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=65'
+ZSH_HIGHLIGHT_STYLES[function]='fg=65'
+ZSH_HIGHLIGHT_STYLES[path]='fg=#8a8a6a,underline'
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#7a7a7a'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#7a7a7a'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#a05050'
+
+# --- ls 輸出顏色（暗色調，使用 GNU ls）---
+export LS_COLORS="di=38;5;24:ln=38;5;94:so=38;5;60:pi=38;5;94:ex=38;5;22:bd=38;5;58:cd=38;5;58:su=38;5;88:sg=38;5;88:tw=38;5;24:ow=38;5;24"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+alias ls='gls --color=auto'

@@ -21,7 +21,7 @@ module.exports = {
         // letter spacing as a relative unit
         letterSpacing: 0,
         // terminal cursor background color and opacity (hex, rgb, hsl, hsv, hwb or cmyk)
-        cursorColor: 'rgba(248,28,229,0.8)',
+        cursorColor: 'rgba(40,140,120,0.8)',
         // terminal text color under BLOCK cursor
         cursorAccentColor: '#000',
         // `'BEAM'` for |, `'UNDERLINE'` for _, `'BLOCK'` for █
@@ -32,13 +32,20 @@ module.exports = {
         foregroundColor: '#fff',
         // terminal background color
         // opacity is only supported on macOS
-        backgroundColor: '#000',
+        backgroundColor: 'transparent',
         // terminal selection color
-        selectionColor: 'rgba(248,28,229,0.3)',
+        selectionColor: 'rgba(40,140,120,0.25)',
         // border color (window, tabs)
         borderColor: '#333',
         // custom CSS to embed in the main window
-        css: '',
+        css: `
+            .header_header, .tabs_nav {
+                background: rgba(0, 0, 0, 0.85) !important;
+            }
+            .terms_terms {
+                background-color: rgba(0, 0, 0, 0.9);
+            }
+        `,
         // custom CSS to embed in the terminal window
         termCSS: '',
         // set custom startup directory (must be an absolute path)
@@ -118,7 +125,7 @@ module.exports = {
         macOptionSelectionMode: 'vertical',
         // Whether to use the WebGL renderer. Set it to false to use canvas-based
         // rendering (slower, but supports transparent backgrounds)
-        webGLRenderer: true,
+        webGLRenderer: false,
         // keypress required for weblink activation: [ctrl|alt|meta|shift]
         // todo: does not pick up config changes automatically, need to restart terminal :/
         webLinksActivationKey: '',

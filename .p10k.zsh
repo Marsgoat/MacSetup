@@ -194,9 +194,9 @@
   # Transparent background.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_BACKGROUND=
   # Green prompt symbol if the last command succeeded.
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=76
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=65
   # Red prompt symbol if the last command failed.
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=196
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=131
   # Default prompt symbol.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='❯'
   # Prompt symbol in command vi mode.
@@ -215,9 +215,9 @@
 
   ##################################[ dir: current directory ]##################################
   # Current directory background color.
-  typeset -g POWERLEVEL9K_DIR_BACKGROUND=4
+  typeset -g POWERLEVEL9K_DIR_BACKGROUND=24
   # Default current directory foreground color.
-  typeset -g POWERLEVEL9K_DIR_FOREGROUND=254
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=249
   # If directory is too long, shorten some of its segments to the shortest possible unique
   # prefix. The shortened directory can be tab-completed to the original.
   typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
@@ -354,10 +354,14 @@
 
   #####################################[ vcs: git status ]######################################
   # Version control background colors.
-  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=3
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=3
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=23
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=0
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=136
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=0
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=23
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=0
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=136
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_FOREGROUND=0
   typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=8
 
   # Branch icon. Set this parameter to '\UE0A0 ' for the popular Powerline branch icon.
@@ -386,11 +390,11 @@
     fi
 
     # Styling for different parts of Git status.
-    local       meta='%7F' # white foreground
+    local       meta='%0F' # black foreground
     local      clean='%0F' # black foreground
     local   modified='%0F' # black foreground
     local  untracked='%0F' # black foreground
-    local conflicted='%1F' # red foreground
+    local conflicted='%0F' # black foreground
 
     local res
 
@@ -540,8 +544,8 @@
 
   ###################[ command_execution_time: duration of the last command ]###################
   # Execution time color.
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=0
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=3
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=249
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=136
   # Show duration of the last command if takes at least this many seconds.
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
   # Show this many fractional digits. Zero means round to seconds.
@@ -966,8 +970,8 @@
 
   #####################[ anaconda: conda environment (https://conda.io/) ]######################
   # Anaconda environment color.
-  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=0
-  typeset -g POWERLEVEL9K_ANACONDA_BACKGROUND=4
+  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=249
+  typeset -g POWERLEVEL9K_ANACONDA_BACKGROUND=23
 
   # Anaconda segment format. The following parameters are available within the expansion.
   #
@@ -1055,8 +1059,8 @@
 
   ##############[ nvm: node.js version from nvm (https://github.com/nvm-sh/nvm) ]###############
   # Nvm color.
-  typeset -g POWERLEVEL9K_NVM_FOREGROUND=0
-  typeset -g POWERLEVEL9K_NVM_BACKGROUND=5
+  typeset -g POWERLEVEL9K_NVM_FOREGROUND=249
+  typeset -g POWERLEVEL9K_NVM_BACKGROUND=60
   # Custom icon.
   # typeset -g POWERLEVEL9K_NVM_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
@@ -1150,8 +1154,8 @@
 
   ###[ package: name@version from package.json (https://docs.npmjs.com/files/package.json) ]####
   # Package color.
-  typeset -g POWERLEVEL9K_PACKAGE_FOREGROUND=0
-  typeset -g POWERLEVEL9K_PACKAGE_BACKGROUND=6
+  typeset -g POWERLEVEL9K_PACKAGE_FOREGROUND=254
+  typeset -g POWERLEVEL9K_PACKAGE_BACKGROUND=24
 
   # Package format. The following parameters are available within the expansion.
   #
@@ -1675,8 +1679,8 @@
 
   ####################################[ time: current time ]####################################
   # Current time color.
-  typeset -g POWERLEVEL9K_TIME_FOREGROUND=0
-  typeset -g POWERLEVEL9K_TIME_BACKGROUND=7
+  typeset -g POWERLEVEL9K_TIME_FOREGROUND=249
+  typeset -g POWERLEVEL9K_TIME_BACKGROUND=238
   # Format for the current time: 09:51:02. See `man 3 strftime`.
   typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
   # If set to true, time will update when you hit enter. This way prompts for the past
